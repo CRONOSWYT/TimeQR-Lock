@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lector de QR - TimeQR Lock (Beta)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f0f4f7;
+    }
+    #reader {
+      width: 320px;
+      margin: 0 auto 20px;
+      border: 2px solid #00796b;
+      border-radius: 10px;
+      overflow: hidden;
+      display: none;
+    }
+    #info {
+      margin-top: 20px;
+      background-color: #d9f2e3;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+    }
+    button, input[type="file"] {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    input[type="file"] {
+      background-color: #00695c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lector de QR - TimeQR Lock (Beta)</h1>
+  <p>Escanea un QR con la cámara o sube una imagen para obtener los datos.</p>
+
+  <button onclick="iniciarLector()">📷 Escanear con cámara</button><br>
+  <input type="file" accept="image/*" onchange="escanearImagen(this)"><br>
+
+  <div id="reader"></div>
+
+  <div id="info">
+    <h3>Estudiante escaneado:</h3>
+    <p id="datos"></p>
+    <button onclick="guardarTXT()">📄 Guardar como .txt</button>
+  </div>
+
+  <!-- Librerías -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <script>
+    const CLAVE_SECRETA = 'https://www.youtube.com/@WorldTimeOficial';
+    let ultimoRegistro = '';
+    let lector;
+
+    function descifrarQR(contenidoCifrado) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(contenidoCifrado, CLAVE_SECRETA);
+        const datosDescifrados = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        return datosDescifrados;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function iniciarLector() {
+      document.getElementById('reader').style.display = 'block';
+      lector = new Html5Qrcode("reader");
+
+      lector.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        qrCodeMessage => {
+          lector.stop();
+          procesarQR(qrCodeMessage);
+        },
+        error => {
+          // Ignorar errores de escaneo
+        }
+      ).catch(err => {
+        alert("No se pudo acceder a la cámara: " + err);
+      });
+    }
+
+    function escanearImagen(input) {
+      if (!input.files.length) return;
+      const file = input.files[0];
+      const lectorArchivo = new FileReader();
+      lectorArchivo.onload = () => {
+        Html5Qrcode.getCameras().then(() => {
+          Html5QrcodeScanner.clear();
+        });
+
+        const qr = new Html5Qrcode("reader");
+        qr.scanFile(file, true)
+          .then(result => procesarQR(result))
+          .catch(() => alert("No se encontró ningún código QR en la imagen."));
+      };
+      lectorArchivo.readAsDataURL(file);
+    }
+
+    function procesarQR(contenido) {
+      const datos = descifrarQR(contenido);
+      if (!datos) {
+        alert("QR inválido o no generado por TimeQR Lock.");
+        return;
+      }
+
+      const fecha = new Date();
+      const registro = `Nombre: ${datos.nombre}\nGrado: ${datos.grado}\nFecha: ${fecha.toLocaleDateString()}\nHora: ${fecha.toLocaleTimeString()}\n----------------------\n`;
+      document.getElementById('datos').textContent = registro;
+      document.getElementById('info').style.display = 'block';
+      ultimoRegistro = registro;
+    }
+
+    function guardarTXT() {
+      const blob = new Blob([ultimoRegistro], { type: 'text/plain' });
+      const enlace = document.createElement('a');
+      enlace.href = URL.createObjectURL(blob);
+      enlace.download = 'registro_estudiante.txt';
+      enlace.click();
+    }
+  </script>
+</body>
+</html>

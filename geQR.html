@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clave de escaneo - TimeQR Lock</title>
+  <style>
+    body {
+      background-color: #eef6f8;
+      color: #333;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #00796b;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .clave-box {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #dff0ec;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #copiado {
+      font-size: 0.9em;
+      color: green;
+      display: none;
+    }
+
+    #contador {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Generar clave para escaneo</h1>
+  <p>Solo puedes generar una nueva clave cada 3 horas.</p>
+
+  <button id="btnGenerar" onclick="generarClave()">Generar clave</button>
+  <p id="contador"></p>
+
+  <div id="claveBox" class="clave-box">
+    <h3>Clave generada:</h3>
+    <p id="clave" style="font-weight: bold; font-size: 1.2em;"></p>
+    <button onclick="copiarClave()">📋 Copiar clave</button>
+    <p id="copiado">✅ Clave copiada al portapapeles</p>
+    <p style="font-size: 0.9em; color: #555">Válida por 3 horas.</p>
+  </div>
+
+  <script>
+    function generarClaveAleatoria() {
+      const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let clave = 'QRS-';
+      for (let i = 0; i < 4; i++) clave += letras[Math.floor(Math.random() * letras.length)];
+      clave += '-';
+      for (let i = 0; i < 4; i++) clave += letras[Math.floor(Math.random() * letras.length)];
+      return clave;
+    }
+
+    function mostrarClaveExistente() {
+      const clave = localStorage.getItem('claveTemporal');
+      if (clave) {
+        document.getElementById('clave').textContent = clave;
+        document.getElementById('claveBox').style.display = 'block';
+      }
+    }
+
+    function generarClave() {
+      const ahora = Date.now();
+      const ultimaHora = localStorage.getItem('horaGeneracion');
+      const tresHoras = 3 * 60 * 60 * 1000;
+
+      if (ultimaHora) {
+        const tiempoPasado = ahora - parseInt(ultimaHora);
+        if (tiempoPasado < tresHoras) {
+          alert('Ya generaste una clave. Debes esperar 3 horas para una nueva.');
+          mostrarClaveExistente();
+          return;
+        }
+      }
+
+      const clave = generarClaveAleatoria();
+      localStorage.setItem('claveTemporal', clave);
+      localStorage.setItem('horaGeneracion', ahora);
+
+      document.getElementById('clave').textContent = clave;
+      document.getElementById('claveBox').style.display = 'block';
+      copiarClave();
+      actualizarContador();
+    }
+
+    function copiarClave() {
+      const texto = document.getElementById('clave').textContent;
+      navigator.clipboard.writeText(texto).then(() => {
+        document.getElementById('copiado').style.display = 'inline';
+        setTimeout(() => {
+          document.getElementById('copiado').style.display = 'none';
+        }, 2000);
+      });
+    }
+
+    function actualizarContador() {
+      const btn = document.getElementById('btnGenerar');
+      const texto = document.getElementById('contador');
+      const ultimaHora = parseInt(localStorage.getItem('horaGeneracion') || '0');
+      const ahora = Date.now();
+      const tiempoRestante = (ultimaHora + 3 * 60 * 60 * 1000) - ahora;
+
+      if (tiempoRestante > 0) {
+        const horas = Math.floor(tiempoRestante / (1000 * 60 * 60));
+        const minutos = Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((tiempoRestante % (1000 * 60)) / 1000);
+
+        texto.textContent = `Podrás generar una nueva clave en: ${horas}h ${minutos}m ${segundos}s`;
+        btn.disabled = true;
+        mostrarClaveExistente();
+      } else {
+        texto.textContent = '';
+        btn.disabled = false;
+      }
+    }
+
+    setInterval(actualizarContador, 1000);
+    actualizarContador(); // Al cargar la página
+  </script>
+
+</body>
+</html>
