@@ -60,7 +60,7 @@
         const index = usuarios.indexOf(user);
         if (index !== -1 && contrasenas[index] === pass) {
           localStorage.setItem("loggedInUser", user);
-          window.location.href = "https://cronoswyt.github.io/TimeQR-Lock/";
+          window.location.href = "https://cronoswyt.github.io/TimeQR-Lock/inicio";
         } else {
           document.getElementById("mensaje").textContent =
             "Usuario o contraseña incorrectos";
