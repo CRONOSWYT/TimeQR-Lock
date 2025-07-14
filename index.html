@@ -1,12 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Inicio - TimeQR Lock</title>
-</head>
-<body>
-  <h1> TimeQR Lock</h1>
-  <p>Sistema de asistencia con QR</p>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro y Login</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      input,
+      button {
+        display: block;
+        width: 30%;
+        margin: 10px 0;
+        padding: 10px;
+        color: white;
+        background-color: #1f1f1f;
+        border-color: black;
+      }
 
-</body>
+      .link {
+        text-align: center;
+        color: blue;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-top: 10px;
+      }
+
+      #mensaje {
+        text-align: center;
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <form>
+        <div class="formulario" id="rF">
+          <h2>Registro</h2>
+          <input
+            type="text"
+            id="rt"
+            placeholder="Usuario o Correo Electrónico"
+            required
+          />
+          <input type="password" id="rP" placeholder="Contraseña" required />
+          <button onclick="registrar()">Registrar</button>
+          <div class="link" onclick="mLogin()">
+            ¿Ya tienes cuenta? Haz clic aquí para iniciar sesión
+          </div>
+        </div>
+
+        <div class="formulario" id="lF" style="display: none">
+          <h2>Iniciar Sesión</h2>
+          <input
+            type="text"
+            id="lu"
+            placeholder="Usuario o Correo Electrónico"
+            required
+          />
+          <input type="password" id="lP" placeholder="Contraseña" required />
+          <button onclick="login()">Entrar</button>
+          <div class="link" onclick="mostrarRegistro()">
+            ¿No tienes cuenta? Haz clic aquí para registrarte
+          </div>
+          <div id="mensaje"></div>
+        </div>
+      </form>
+    </center>
+    <script>
+      function mLogin() {
+        document.getElementById("rF").style.display = "none";
+        document.getElementById("lF").style.display = "block";
+      }
+
+      function mostrarRegistro() {
+        document.getElementById("lF").style.display = "none";
+        document.getElementById("rF").style.display = "block";
+      }
+
+      function registrar() {
+        const user = document.getElementById("rt").value;
+        const pass = document.getElementById("rP").value;
+
+        if (user === "" || pass === "") {
+          //alert("Por favor completa todos los campos");
+          Swal.fire({
+            title: "¡Error!",
+            text: "Por favor completa todos los campos.",
+            icon: "error",
+            background: "#111",
+            color: "#fff",
+            confirmButtonColor: "#00ffcc",
+          });
+          return;
+        }
+
+        if (localStorage.getItem("user_" + user)) {
+          //alert("Ese usuario ya existe");
+          Swal.fire({
+            title: "¡Error!",
+            text: "Ese usuario ya existe. Por favor, elige otro.",
+            icon: "error",
+            background: "#111",
+            color: "#fff",
+            confirmButtonColor: "#00ffcc",
+          });
+          return;
+        }
+
+        localStorage.setItem("user_" + user, pass);
+        Swal.fire({
+          title: "¡Registro exitoso!",
+          text: "Usuario registrado correctamente. Ahora inicia sesión.",
+          icon: "success",
+          background: "#111",
+          color: "#fff",
+          confirmButtonColor: "#00ffcc",
+        });
+        //alert de usuario registrado
+        mLogin();
+      }
+
+      function login() {
+        const user = document.getElementById("lu").value;
+        const pass = document.getElementById("lP").value;
+
+        const storedPass = localStorage.getItem("user_" + user);
+
+        if (storedPass === pass) {
+          localStorage.setItem("loggedInUser", user);
+          window.location.href = "pagina.html";
+        } else {
+          document.getElementById("mensaje").textContent =
+            "usuario o contraseña incorrectos";
+        }
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
 </html>
