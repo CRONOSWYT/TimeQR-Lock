@@ -11,13 +11,15 @@
     .ok { color: green; }
     .fail { color: red; }
     select { margin-bottom: 10px; }
+    button { margin-bottom: 10px; }
   </style>
 </head>
 <body>
-  <button onclick="location.reload();">Reiniciar</button>
+
+  <button onclick="location.reload();">🔄 Reiniciar</button>
   <h2>Lector de QR - TimeQRLock</h2>
 
-  <label for="cameraSelect">Selecciona la cámara:</label>
+  <label for="cameraSelect">📷 Selecciona la cámara:</label>
   <select id="cameraSelect"></select>
 
   <div id="lector" style="width: 300px;"></div>
@@ -36,7 +38,6 @@
 
     const lector = new Html5Qrcode("lector");
     let escaneando = false;
-    let camarasDisponibles = [];
 
     function registrarAsistencia(qrCifrado) {
       try {
@@ -45,78 +46,84 @@
         const ahora = new Date();
         const fechaHora = ahora.toLocaleString();
 
+        // Mostrar en pantalla
         document.getElementById("nombre").textContent = datos.nombre;
         document.getElementById("grado").textContent = datos.grado;
         document.getElementById("hora").textContent = fechaHora;
 
+        // Enviar a Google Sheets
         fetch(googleScriptURL, {
           method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             nombre: datos.nombre,
             grado: datos.grado,
             fechaHora: fechaHora
-          }),
-          headers: { "Content-Type": "application/json" }
+          })
         })
         .then(res => res.text())
         .then(respuesta => {
-          document.getElementById("estado").textContent = "¡Asistencia registrada!";
+          document.getElementById("estado").textContent = "✅ Asistencia registrada";
           document.getElementById("estado").className = "ok";
           console.log("Registro:", respuesta);
         })
         .catch(err => {
-          document.getElementById("estado").textContent = "Error al registrar asistencia";
+          document.getElementById("estado").textContent = "❌ Error al registrar asistencia";
           document.getElementById("estado").className = "fail";
+          console.error("Error al registrar:", err);
         });
 
       } catch (err) {
-        alert("QR inválido o manipulado");
+        alert("⚠️ QR inválido o manipulado");
+        console.error("Error de descifrado:", err);
       }
     }
 
     async function iniciarLector(camaraId) {
       if (escaneando) {
-        await lector.stop(); // Espera a que se detenga antes de iniciar otra
+        await lector.stop();
         escaneando = false;
       }
 
       lector.start(
         camaraId,
         { fps: 10, qrbox: 250 },
-        qr => {
-          lector.stop(); // detener tras lectura
-          escaneando = false;
-          registrarAsistencia(qr);
+        qrCode => {
+          lector.stop().then(() => {
+            escaneando = false;
+            registrarAsistencia(qrCode);
+          });
         },
-        error => { }
+        error => { /* Ignora errores de escaneo */ }
       ).then(() => {
         escaneando = true;
       }).catch(err => {
-        console.error("Error iniciando lector:", err);
+        console.error("No se pudo iniciar la cámara:", err);
+        document.getElementById("estado").textContent = "❌ Error al iniciar la cámara";
+        document.getElementById("estado").className = "fail";
       });
     }
 
     Html5Qrcode.getCameras().then(camaras => {
-      camarasDisponibles = camaras;
-      const select = document.getElementById("cameraSelect");
-
-      camaras.forEach((camara, index) => {
-        const opcion = document.createElement("option");
-        opcion.value = camara.id;
-        opcion.text = camara.label || `Cámara ${index + 1}`;
-        select.appendChild(opcion);
+      const selector = document.getElementById("cameraSelect");
+      camaras.forEach((camara, i) => {
+        const option = document.createElement("option");
+        option.value = camara.id;
+        option.text = camara.label || `Cámara ${i + 1}`;
+        selector.appendChild(option);
       });
 
       if (camaras.length > 0) {
         iniciarLector(camaras[0].id);
       }
 
-      select.addEventListener("change", async e => {
-        await iniciarLector(e.target.value);
+      selector.addEventListener("change", e => {
+        iniciarLector(e.target.value);
       });
+
     }).catch(err => {
-      alert("No se pudieron acceder a las cámaras");
-      console.error(err);
+      alert("🚫 No se pudo acceder a las cámaras");
+      console.error("Error al obtener cámaras:", err);
     });
   </script>
 
