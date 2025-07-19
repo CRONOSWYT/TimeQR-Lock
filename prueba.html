@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prueba TimeQRLock</title>
+</head>
+<body>
+  <h2>Enviar asistencia</h2>
+  <input id="nombre" placeholder="Nombre"><br>
+  <input id="grado" placeholder="Grado"><br>
+  <button onclick="enviar()">Enviar</button>
+  <p id="respuesta"></p>
+
+  <script>
+    function enviar() {
+      const nombre = document.getElementById("nombre").value;
+      const grado = document.getElementById("grado").value;
+      const fechaHora = new Date().toLocaleString();
+
+      fetch("https://script.google.com/macros/s/AKfycbwTBqlrqmlWKySbWdxp7DF8H6_DYfqDGG0OtWeeVd0RHjxWiYdwEs3JKYqDbcGedcjh/exec", {
+        method: "POST",
+        body: JSON.stringify({ nombre, grado, fechaHora }),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.text())
+      .then(txt => document.getElementById("respuesta").innerText = txt)
+      .catch(err => document.getElementById("respuesta").innerText = "❌ Error: " + err);
+    }
+  </script>
+</body>
+</html>
