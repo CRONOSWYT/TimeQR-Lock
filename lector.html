@@ -10,13 +10,18 @@
     #resultados { margin-top: 20px; border: 1px solid #ccc; padding: 10px; }
     .ok { color: green; }
     .fail { color: red; }
+    select { margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
   <h2>Lector de QR - TimeQRLock</h2>
-  <div id="lector" style="width: 300px;"></div>
   
+  <label for="cameraSelect">Selecciona la cámara:</label>
+  <select id="cameraSelect"></select>
+  
+  <div id="lector" style="width: 300px;"></div>
+
   <div id="resultados">
     <h3>Resultado:</h3>
     <p><strong>Nombre:</strong> <span id="nombre"></span></p>
@@ -29,20 +34,21 @@
     const claveSecreta = "timeqrlock_2025";
     const googleScriptURL = "https://script.google.com/macros/s/AKfycbzuS_qJ0LXuzPDJitSUtFWVP7m2qaedRdRzSrWL_qc81teM7hs--wCGyu9L8jhO-2cr/exec";
 
+    const lector = new Html5Qrcode("lector");
+    let camarasDisponibles = [];
+    let escaneando = false;
+
     function registrarAsistencia(qrCifrado) {
       try {
         const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
         const datos = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
         const ahora = new Date();
         const fechaHora = ahora.toLocaleString();
 
-        // Mostrar en pantalla
         document.getElementById("nombre").textContent = datos.nombre;
         document.getElementById("grado").textContent = datos.grado;
         document.getElementById("hora").textContent = fechaHora;
 
-        // Enviar a Google Sheets
         fetch(googleScriptURL, {
           method: "POST",
           body: JSON.stringify({
@@ -55,6 +61,7 @@
         .then(res => res.text())
         .then(respuesta => {
           document.getElementById("estado").textContent = "¡Asistencia registrada!";
+          document.getElementById("estado").className = "ok";
           console.log("Registro:", respuesta);
         })
         .catch(err => {
@@ -67,20 +74,40 @@
       }
     }
 
-    const qrReader = new Html5Qrcode("lector");
+    function iniciarLector(camaraId) {
+      if (escaneando) lector.stop();
+
+      lector.start(
+        camaraId,
+        { fps: 10, qrbox: 250 },
+        qr => {
+          lector.stop();
+          escaneando = false;
+          registrarAsistencia(qr);
+        },
+        error => { /* silencio */ }
+      );
+      escaneando = true;
+    }
 
     Html5Qrcode.getCameras().then(camaras => {
-      if (camaras && camaras.length) {
-        qrReader.start(
-          camaras[0].id,
-          { fps: 10, qrbox: 250 },
-          qrCodeMessage => {
-            qrReader.stop();
-            registrarAsistencia(qrCodeMessage);
-          },
-          error => {}
-        );
+      camarasDisponibles = camaras;
+      const select = document.getElementById("cameraSelect");
+
+      camaras.forEach((camara, index) => {
+        const opcion = document.createElement("option");
+        opcion.value = camara.id;
+        opcion.text = camara.label || `Cámara ${index + 1}`;
+        select.appendChild(opcion);
+      });
+
+      if (camaras.length) {
+        iniciarLector(camaras[0].id);
       }
+
+      select.addEventListener("change", e => {
+        iniciarLector(e.target.value);
+      });
     });
   </script>
 
