@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lector QR - TimeQRLock</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #resultados { margin-top: 20px; border: 1px solid #ccc; padding: 10px; }
+    .ok { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+
+  <h2>Lector de QR - TimeQRLock</h2>
+  <div id="lector" style="width: 300px;"></div>
+  
+  <div id="resultados">
+    <h3>Resultado:</h3>
+    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+    <p><strong>Grado:</strong> <span id="grado"></span></p>
+    <p><strong>Fecha y hora:</strong> <span id="hora"></span></p>
+    <p id="estado" class="ok"></p>
+  </div>
+
+  <script>
+    const claveSecreta = "timeqrlock_2025";
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycbzuS_qJ0LXuzPDJitSUtFWVP7m2qaedRdRzSrWL_qc81teM7hs--wCGyu9L8jhO-2cr/exec";
+
+    function registrarAsistencia(qrCifrado) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
+        const datos = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+        const ahora = new Date();
+        const fechaHora = ahora.toLocaleString();
+
+        // Mostrar en pantalla
+        document.getElementById("nombre").textContent = datos.nombre;
+        document.getElementById("grado").textContent = datos.grado;
+        document.getElementById("hora").textContent = fechaHora;
+
+        // Enviar a Google Sheets
+        fetch(googleScriptURL, {
+          method: "POST",
+          body: JSON.stringify({
+            nombre: datos.nombre,
+            grado: datos.grado,
+            fechaHora: fechaHora
+          }),
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(res => res.text())
+        .then(respuesta => {
+          document.getElementById("estado").textContent = "¡Asistencia registrada!";
+          console.log("Registro:", respuesta);
+        })
+        .catch(err => {
+          document.getElementById("estado").textContent = "Error al registrar asistencia";
+          document.getElementById("estado").className = "fail";
+        });
+
+      } catch (err) {
+        alert("QR inválido o manipulado");
+      }
+    }
+
+    const qrReader = new Html5Qrcode("lector");
+
+    Html5Qrcode.getCameras().then(camaras => {
+      if (camaras && camaras.length) {
+        qrReader.start(
+          camaras[0].id,
+          { fps: 10, qrbox: 250 },
+          qrCodeMessage => {
+            qrReader.stop();
+            registrarAsistencia(qrCodeMessage);
+          },
+          error => {}
+        );
+      }
+    });
+  </script>
+
+</body>
+</html>
