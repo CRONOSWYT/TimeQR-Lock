@@ -2,59 +2,71 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio - TimeQR Lock</title>
   <script>
-     const user = localStorage.getItem("loggedInUser");
-
-      if (!user) {
-        Swal.fire({
-          title: "¡Error!",
-          text: "Debes iniciar sesión",
-          icon: "error",
-          background: "#111",
-          color: "#fff",
-          confirmButtonColor: "#00ffcc",
-        });
-        window.location.href = "https://cronoswyt.github.io/TimeQR-Lock/";
-      }
+    const user = localStorage.getItem("loggedInUser");
+    if (!user) {
+      alert("¡Error!\nDebes iniciar sesión");
+      window.location.href = "https://cronoswyt.github.io/TimeQR-Lock/";
+    }
   </script>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #ccc;
+      padding: 20px;
       text-align: center;
-      padding: 40px;
-      background: linear-gradient(to bottom right, #e0f7fa, #e8f5e9);
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 16px;
     }
     h1 {
-      font-size: 2em;
+      font-size: 1.5em;
       margin-bottom: 10px;
+      color: #222;
     }
     p {
       color: #555;
-    }
-    .botones {
-      margin-top: -10px;
+      margin-bottom: 16px;
     }
     .botones a {
-      display: inline-block;
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 16px;
-      background-color: #00796b;
-      color: white;
+      display: block;
+      margin: 12px auto;
+      padding: 12px;
+      background: #00796b;
+      color: #fff;
       text-decoration: none;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
+      border-radius: 6px;
+      font-size: 1em;
     }
     .botones a:hover {
-      background-color: #004d40;
+      background: #004d40;
     }
   </style>
 </head>
 <body>
-  <img src="logo timeqrlock.svg" alt="" width="300" height="370">
-  <div class="botones">
-    <a href="https://cronoswyt.github.io/TimeQR-Lock/lector">📷 Escanear QR</a>
+  <div class="container">
+    <img src="logo timeqrlock.svg" alt="Logo TimeQR Lock" width="300" height="370">
+    <h1>Bienvenido a TimeQR Lock</h1>
+    <p>Accede a las funciones principales usando los botones de abajo.</p>
+    <div class="botones">
+      <a href="https://cronoswyt.github.io/TimeQR-Lock/lector">📷 Escanear QR</a>
+    </div>
   </div>
 </body>
 
