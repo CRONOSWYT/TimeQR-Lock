@@ -2,51 +2,70 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="style.css" />
     <style>
-      body{
-       background: url(fondo.png) center/cover fixed no-repeat;
+      body {
+        background: #222 url(fondo.webp) no-repeat center center;
+        background-size: cover;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
-      input,
-      button {
-        border-radius: 30px;
+      form {
+        width: 100%;
+        max-width: 350px;
+        background: rgba(0,0,0,0.7);
+        padding: 20px;
+        border-radius: 20px;
+        box-sizing: border-box;
+      }
+      h2 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      input, button {
+        border-radius: 20px;
         display: block;
-        width: 30%;
+        width: 100%;
         margin: 10px 0;
         padding: 10px;
-        color: rgb(110,147,204);
+        color: #fff;
         background-color: #505050;
-        border-color: rgb(0,0,0);
+        border: 1px solid #222;
+        box-sizing: border-box;
+        font-size: 1em;
       }
-
+      button {
+        background-color: #2a6ad1;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
       #mensaje {
         text-align: center;
-        color: rgb(255,0, 55);
+        color: #ff0037;
+        margin-top: 10px;
       }
-.buttoninicio{
-  width: 70px;
-  border-radius: 20px;
-}
     </style>
   </head>
   <body>
-    <center>
-     <form onsubmit="login(); return false;">
-        <div class="formulario" id="lF">
-          <h2>Iniciar Sesión</h2>
-          <input
-            type="text"
-            id="lu"
-            placeholder="Usuario o Correo Electrónico"
-            required
-          />
-          <input type="password" id="lP" placeholder="Contraseña" required />
-          <button class="botoninicio" type="submit">Entrar</button>
-          <div id="mensaje"></div>
-        </div>
-      </form>
-    </center>
+    <form onsubmit="login(); return false;">
+      <h2>Iniciar Sesión</h2>
+      <input
+        type="text"
+        id="lu"
+        placeholder="Usuario o Correo Electrónico"
+        required
+      />
+      <input type="password" id="lP" placeholder="Contraseña" required />
+      <button type="submit">Entrar</button>
+      <div id="mensaje"></div>
+    </form>
     <script>
       // Usuarios y contraseñas predefinidos en arreglos
       const usuarios = ["admin"];
