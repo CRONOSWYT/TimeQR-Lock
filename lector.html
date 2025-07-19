@@ -61,17 +61,31 @@
 
   <script>
     const claveSecreta = "timeqrlock_2025";
-    const googleScriptURL = "https://script.google.com/macros/s/AKfycbwTBqlrqmlWKySbWdxp7DF8H6_DYfqDGG0OtWeeVd0RHjxWiYdwEs3JKYqDbcGedcjh/exec";
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycbwV8j5EwWwY9i8aIrLQNf97Sngh2fTayrfi-8Ld25M/dev";
 
     const lector = new Html5Qrcode("lector");
     let escaneando = false;
 
+    function mostrarEstado(mensaje, exito = true) {
+      const estado = document.getElementById("estado");
+      estado.textContent = mensaje;
+      estado.className = exito ? "ok" : "fail";
+    }
+
     function registrarAsistencia(qrCifrado) {
       try {
         const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
-        const datos = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        const textoDescifrado = bytes.toString(CryptoJS.enc.Utf8);
+
+        if (!textoDescifrado) throw new Error("QR vacío o clave incorrecta");
+
+        const datos = JSON.parse(textoDescifrado);
         const ahora = new Date();
         const fechaHora = ahora.toLocaleString();
+
+        if (!datos.nombre || !datos.grado) {
+          throw new Error("El QR no contiene nombre o grado");
+        }
 
         document.getElementById("nombre").textContent = datos.nombre;
         document.getElementById("grado").textContent = datos.grado;
@@ -88,18 +102,20 @@
         })
         .then(res => res.text())
         .then(respuesta => {
-          document.getElementById("estado").textContent = "✅ Asistencia registrada";
-          document.getElementById("estado").className = "ok";
+          if (respuesta.includes("✅")) {
+            mostrarEstado("✅ Asistencia registrada", true);
+          } else {
+            mostrarEstado("❌ Error del servidor: " + respuesta, false);
+          }
         })
         .catch(err => {
-          document.getElementById("estado").textContent = "❌ Error al registrar asistencia";
-          document.getElementById("estado").className = "fail";
           console.error("Fetch error:", err);
+          mostrarEstado("❌ Error al conectar con el servidor", false);
         });
 
       } catch (err) {
-        alert("⚠️ QR inválido o manipulado");
-        console.error("Error decodificando QR:", err);
+        mostrarEstado("⚠️ QR inválido: " + err.message, false);
+        console.error("Error al procesar QR:", err);
       }
     }
 
@@ -117,13 +133,14 @@
           escaneando = false;
           registrarAsistencia(qr);
         },
-        err => { /* Ignorar errores de escaneo */ }
+        err => {
+          // No mostramos errores de lectura continua
+        }
       ).then(() => {
         escaneando = true;
       }).catch(error => {
-        document.getElementById("estado").textContent = "❌ No se pudo iniciar la cámara";
-        document.getElementById("estado").className = "fail";
-        console.error("Inicio fallido:", error);
+        mostrarEstado("❌ No se pudo iniciar la cámara", false);
+        console.error("Inicio de cámara falló:", error);
       });
     }
 
@@ -132,7 +149,7 @@
       camaras.forEach((cam, i) => {
         const opcion = document.createElement("option");
         opcion.value = cam.id;
-        opcion.text = `Cámara ${i + 1}`;
+        opcion.text = cam.label || `Cámara ${i + 1}`;
         selector.appendChild(opcion);
       });
 
@@ -145,7 +162,7 @@
       });
     }).catch(err => {
       alert("🚫 No se pudo acceder a las cámaras");
-      console.error("Error detectando cámaras:", err);
+      console.error("Error al detectar cámaras:", err);
     });
   </script>
 
