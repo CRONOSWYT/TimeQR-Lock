@@ -14,12 +14,12 @@
   </style>
 </head>
 <body>
-<button onclick="location.reload();">reiniciar pagina</button>
+  <button onclick="location.reload();">Reiniciar</button>
   <h2>Lector de QR - TimeQRLock</h2>
-  
+
   <label for="cameraSelect">Selecciona la cámara:</label>
   <select id="cameraSelect"></select>
-  
+
   <div id="lector" style="width: 300px;"></div>
 
   <div id="resultados">
@@ -35,8 +35,8 @@
     const googleScriptURL = "https://script.google.com/macros/s/AKfycbzuS_qJ0LXuzPDJitSUtFWVP7m2qaedRdRzSrWL_qc81teM7hs--wCGyu9L8jhO-2cr/exec";
 
     const lector = new Html5Qrcode("lector");
-    let camarasDisponibles = [];
     let escaneando = false;
+    let camarasDisponibles = [];
 
     function registrarAsistencia(qrCifrado) {
       try {
@@ -74,20 +74,26 @@
       }
     }
 
-    function iniciarLector(camaraId) {
-      if (escaneando) lector.stop();
+    async function iniciarLector(camaraId) {
+      if (escaneando) {
+        await lector.stop(); // Espera a que se detenga antes de iniciar otra
+        escaneando = false;
+      }
 
       lector.start(
         camaraId,
         { fps: 10, qrbox: 250 },
         qr => {
-          lector.stop();
+          lector.stop(); // detener tras lectura
           escaneando = false;
           registrarAsistencia(qr);
         },
-        error => { /* silencio */ }
-      );
-      escaneando = true;
+        error => { }
+      ).then(() => {
+        escaneando = true;
+      }).catch(err => {
+        console.error("Error iniciando lector:", err);
+      });
     }
 
     Html5Qrcode.getCameras().then(camaras => {
@@ -101,13 +107,16 @@
         select.appendChild(opcion);
       });
 
-      if (camaras.length) {
+      if (camaras.length > 0) {
         iniciarLector(camaras[0].id);
       }
 
-      select.addEventListener("change", e => {
-        iniciarLector(e.target.value);
+      select.addEventListener("change", async e => {
+        await iniciarLector(e.target.value);
       });
+    }).catch(err => {
+      alert("No se pudieron acceder a las cámaras");
+      console.error(err);
     });
   </script>
 
