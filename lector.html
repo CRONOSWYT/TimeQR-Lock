@@ -58,7 +58,7 @@
   </div>
 
   <script>
-    const claveSecreta = "timeqrlock_2025";
+    const claveSecreta = "timeqrlock-world-time"; // Debe ser igual que en el generador
     const lector = new Html5Qrcode("lector");
     let escaneando = false;
 
@@ -93,21 +93,17 @@
         return;
       }
 
-      // Mostrar los datos
+      // Mostrar datos
       const ahora = new Date();
       document.getElementById("nombre").textContent = datos.nombre;
       document.getElementById("grado").textContent = datos.grado;
       document.getElementById("doc").textContent = datos.documento;
-      document.getElementById("documento").value = datos.documento;
       document.getElementById("hora").textContent = ahora.toLocaleString();
       mostrarEstado("✅ QR leído correctamente", true);
 
-      // También mostrar el documento en el input
-      document.getElementById("documento").value = datos.documento;
-
       setTimeout(() => {
         location.reload();
-      }, 2000);
+      }, 3000);
     }
 
     async function iniciarLector(camaraId) {
@@ -125,7 +121,7 @@
         }
       ).then(() => {
         escaneando = true;
-      }).catch(error => {
+      }).catch(() => {
         mostrarEstado("❌ No se pudo iniciar la cámara", false);
       });
     }
@@ -143,7 +139,7 @@
       } else {
         mostrarEstado("No se encontró cámara disponible", false);
       }
-    }).catch(err => {
+    }).catch(() => {
       alert("🚫 No se pudo acceder a las cámaras");
     });
   </script>
