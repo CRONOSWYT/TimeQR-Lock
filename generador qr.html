@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Generador QR TimeQRLock</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+        display: flex;
+      align-items: center;
+      flex-direction: column;
+      font-family: Arial;
+      padding: 20px;
+      background-color:  rgb(157, 189, 238);
+    }
+    input {
+      margin: 5px;
+      padding: 5px;
+      width: 300px;
+      }
+      #qrcode {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Generador QR - TimeQRLock</h2>
+
+    <label>Nombre completo:</label><br />
+    <input type="text" id="nombre" /><br />
+
+    <label>Grado:</label><br />
+    <input type="text" id="grado" /><br />
+
+    <label>Documento de identidad:</label><br />
+    <input type="text" id="documento" /><br />
+
+    <button onclick="generarQR()">Generar QR</button>
+
+    <div id="qrcode"></div>
+
+    <script>
+      function generarQR() {
+        const nombre = document.getElementById("nombre").value.trim();
+        const grado = document.getElementById("grado").value.trim();
+        const documento = document.getElementById("documento").value.trim();
+
+        if (!nombre || !grado || !documento) {
+          alert("Por favor completa todos los campos.");
+          return;
+        }
+
+        const datos = JSON.stringify({
+          nombre: nombre,
+          grado: grado,
+          documento: documento,
+        });
+
+        // Encriptar los datos (puedes cambiar la clave secreta)
+        const claveSecreta = "timeqrlock-world-time";
+        const datosCifrados = CryptoJS.AES.encrypt(
+          datos,
+          claveSecreta
+        ).toString();
+
+        // Limpiar QR anterior
+        document.getElementById("qrcode").innerHTML = "";
+
+        // Generar QR
+        new QRCode(document.getElementById("qrcode"), {
+          text: datosCifrados,
+          width: 256,
+          height: 256,
+        });
+      }
+    </script>
+  </body>
+</html>
