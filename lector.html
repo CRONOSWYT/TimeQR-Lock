@@ -44,7 +44,7 @@
 <body>
 
   <h2>Lector QR - TimeQRLock</h2>
-  <button onclick="location.reload();"> Reiniciar</button>
+  <button onclick="window.location.replace(window.location.href);">🔄 Reiniciar</button>
 
   <div id="lector"></div>
 
@@ -58,9 +58,10 @@
   </div>
 
   <script>
-    const claveSecreta = "timeqrlock-world-time"; // Debe ser igual que en el generador
+    const claveSecreta = "timeqrlock-world-time";
     const lector = new Html5Qrcode("lector");
     let escaneando = false;
+    let lectorIniciado = false;
 
     function mostrarEstado(mensaje, exito) {
       const estado = document.getElementById("estado");
@@ -73,12 +74,15 @@
     }
 
     function registrarAsistencia(qrCifrado) {
+      if (escaneando) return; // Evita doble lectura
+      escaneando = true;
+
       const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
       const textoDescifrado = bytes.toString(CryptoJS.enc.Utf8);
 
       if (!textoDescifrado) {
         mostrarEstado("❌ QR inválido", false);
-        setTimeout(() => { window.close(); }, 1500);
+        setTimeout(() => { window.location.replace(window.location.href); }, 1000);
         return;
       }
 
@@ -89,7 +93,7 @@
 
       if (!datos || !datos.nombre || !datos.grado || !datos.documento) {
         mostrarEstado("❌ El QR no contiene datos válidos", false);
-        setTimeout(() => { window.close(); }, 1500);
+        setTimeout(() => { window.location.replace(window.location.href); }, 1000);
         return;
       }
 
@@ -102,26 +106,21 @@
       mostrarEstado("✅ QR leído correctamente", true);
 
       setTimeout(() => {
-        location.reload();
-      }, 3000);
+        window.location.replace(window.location.href);
+      }, 1500);
     }
 
     async function iniciarLector(camaraId) {
-      if (escaneando) {
-        await lector.stop();
-        escaneando = false;
-      }
+      if (lectorIniciado) return;
+      lectorIniciado = true;
       lector.start(
         camaraId,
-        { fps: 10, qrbox: 250 },
+        { fps: 20, qrbox: 200 }, // fps más alto y qrbox más pequeño para respuesta rápida
         qr => {
           lector.stop();
-          escaneando = false;
           registrarAsistencia(qr);
         }
-      ).then(() => {
-        escaneando = true;
-      }).catch(() => {
+      ).catch(() => {
         mostrarEstado("❌ No se pudo iniciar la cámara", false);
       });
     }
