@@ -14,13 +14,8 @@
       padding: 10px;
       min-height: 100vh;
     }
-    h2 {
-      text-align: center;
-    }
-    #lector {
-      max-width: 100%;
-      margin: 0 auto;
-    }
+    h2 { text-align: center; }
+    #lector { max-width: 100%; margin: 0 auto; }
     #resultados {
       margin-top: 20px;
       background: #fff;
@@ -42,12 +37,8 @@
       color: #fff;
       cursor: pointer;
     }
-    button:hover {
-      background: #004d40;
-    }
-    @media (min-width: 600px) {
-      #lector { width: 400px; }
-    }
+    button:hover { background: #004d40; }
+    @media (min-width: 600px) { #lector { width: 400px; } }
   </style>
 </head>
 <body>
@@ -70,10 +61,15 @@
     const lector = new Html5Qrcode("lector");
     let escaneando = false;
 
-    function mostrarEstado(mensaje, exito = true) {
+    function mostrarEstado(mensaje, exito) {
       const estado = document.getElementById("estado");
       estado.textContent = mensaje;
       estado.className = exito ? "ok" : "fail";
+    }
+
+    function esJsonValido(texto) {
+      // Solo revisa si empieza y termina con llaves
+      return texto.trim().startsWith("{") && texto.trim().endsWith("}");
     }
 
     function registrarAsistencia(qrCifrado) {
@@ -88,16 +84,14 @@
         return;
       }
 
-      // Validar si es un JSON válido sin try-catch
+      // Validar si es un JSON válido (sin try-catch)
       let datos = null;
-      if (textoDescifrado.trim().startsWith("{") && textoDescifrado.trim().endsWith("}")) {
-        try {
-          datos = JSON.parse(textoDescifrado);
-        } catch {
-          datos = null;
-        }
+      if (esJsonValido(textoDescifrado)) {
+        // Intenta parsear manualmente
+        datos = JSON.parse(textoDescifrado);
       }
 
+      // Si no es válido o faltan datos
       if (!datos || !datos.nombre || !datos.grado) {
         mostrarEstado("❌ El QR no contiene datos válidos", false);
         setTimeout(() => { window.close(); }, 1500);
@@ -110,6 +104,11 @@
       document.getElementById("grado").textContent = datos.grado;
       document.getElementById("hora").textContent = ahora.toLocaleString();
       mostrarEstado("✅ QR leído correctamente", true);
+
+      // Reiniciar la página después de 2 segundos
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
     }
 
     async function iniciarLector(camaraId) {
@@ -129,15 +128,14 @@
         escaneando = true;
       }).catch(error => {
         mostrarEstado("❌ No se pudo iniciar la cámara", false);
-        console.error("Inicio de cámara falló:", error);
       });
     }
 
     Html5Qrcode.getCameras().then(camaras => {
       let camaraPreferida = camaras[0]?.id || "";
-      for (const cam of camaras) {
-        if (/back|trasera|environment/i.test(cam.label)) {
-          camaraPreferida = cam.id;
+      for (let i = 0; i < camaras.length; i++) {
+        if (/back|trasera|environment/i.test(camaras[i].label)) {
+          camaraPreferida = camaras[i].id;
           break;
         }
       }
@@ -148,7 +146,6 @@
       }
     }).catch(err => {
       alert("🚫 No se pudo acceder a las cámaras");
-      console.error("Error al detectar cámaras:", err);
     });
   </script>
 
