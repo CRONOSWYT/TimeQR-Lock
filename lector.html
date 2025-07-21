@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lector QR - TimeQRLock</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      margin: 0;
+      background-color: #f2f2f2;
+    }
+    h2 {
+      text-align: center;
+    }
+    #lector {
+      max-width: 100%;
+      margin: auto;
+    }
+    #resultados {
+      margin-top: 20px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .ok { color: green; }
+    .fail { color: red; }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 1em;
+    }
+    @media (min-width: 600px) {
+      #lector { width: 400px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Lector QR - TimeQRLock</h2>
+  <button onclick="location.reload();">🔄 Reiniciar</button>
+  
+  <label for="cameraSelect">📷 Selecciona la cámara:</label>
+  <select id="cameraSelect"></select>
+
+  <div id="lector"></div>
+
+  <div id="resultados">
+    <h3>Resultado:</h3>
+    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+    <p><strong>Grado:</strong> <span id="grado"></span></p>
+    <p><strong>Fecha y hora:</strong> <span id="hora"></span></p>
+    <p id="estado" class="ok"></p>
+  </div>
+
+  <script>
+    // Código súper simple para mostrar datos al presionar un botón
+    const botonSimular = document.createElement('button');
+    botonSimular.textContent = 'Mostrar datos QR';
+    document.body.appendChild(botonSimular);
+
+    botonSimular.onclick = function() {
+      const nombre = 'Juan Perez';
+      const grado = '10A';
+      const fechaHora = new Date().toLocaleString();
+
+      document.getElementById('nombre').textContent = nombre;
+      document.getElementById('grado').textContent = grado;
+      document.getElementById('hora').textContent = fechaHora;
+      document.getElementById('estado').textContent = 'QR leído correctamente';
+      document.getElementById('estado').className = 'ok';
+    }
+  </script>
+
+</body>
+</html>
