@@ -52,6 +52,7 @@
     <h3>Resultado:</h3>
     <p><strong>Nombre:</strong> <span id="nombre"></span></p>
     <p><strong>Grado:</strong> <span id="grado"></span></p>
+    <p><strong>Documento:</strong> <span id="doc"></span></p>
     <p><strong>Fecha y hora:</strong> <span id="hora"></span></p>
     <p id="estado" class="ok"></p>
   </div>
@@ -68,31 +69,25 @@
     }
 
     function esJsonValido(texto) {
-      // Solo revisa si empieza y termina con llaves
       return texto.trim().startsWith("{") && texto.trim().endsWith("}");
     }
 
     function registrarAsistencia(qrCifrado) {
-      // Descifrar el QR
       const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
       const textoDescifrado = bytes.toString(CryptoJS.enc.Utf8);
 
-      // Si no se pudo descifrar o está vacío
       if (!textoDescifrado) {
         mostrarEstado("❌ QR inválido", false);
         setTimeout(() => { window.close(); }, 1500);
         return;
       }
 
-      // Validar si es un JSON válido (sin try-catch)
       let datos = null;
       if (esJsonValido(textoDescifrado)) {
-        // Intenta parsear manualmente
         datos = JSON.parse(textoDescifrado);
       }
 
-      // Si no es válido o faltan datos
-      if (!datos || !datos.nombre || !datos.grado) {
+      if (!datos || !datos.nombre || !datos.grado || !datos.documento) {
         mostrarEstado("❌ El QR no contiene datos válidos", false);
         setTimeout(() => { window.close(); }, 1500);
         return;
@@ -102,10 +97,14 @@
       const ahora = new Date();
       document.getElementById("nombre").textContent = datos.nombre;
       document.getElementById("grado").textContent = datos.grado;
+      document.getElementById("doc").textContent = datos.documento;
+      document.getElementById("documento").value = datos.documento;
       document.getElementById("hora").textContent = ahora.toLocaleString();
       mostrarEstado("✅ QR leído correctamente", true);
 
-      // Reiniciar la página después de 2 segundos
+      // También mostrar el documento en el input
+      document.getElementById("documento").value = datos.documento;
+
       setTimeout(() => {
         location.reload();
       }, 2000);
