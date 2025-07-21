@@ -4,23 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio - TimeQR Lock</title>
-  <script>
-    const user = localStorage.getItem("loggedInUser");
-    if (!user) {
-      alert("¡Error!\nDebes iniciar sesión");
-      window.location.href = "https://cronoswyt.github.io/TimeQR-Lock/";
-    }
-  </script>
-   <link rel="stylesheet" href="inicio.css">
+  <link rel="stylesheet" href="inicio.css">
+  <script src="inicio.js" defer></script>
 </head>
 <body>
   <div class="container">
-    <img src="logo timeqrlock.svg" alt="Logo TimeQR Lock" width="300" height="370">
+    <img src="logo timeqrlock.svg" alt="Logo TimeQR Lock" width="300" height="370" loading="lazy">
     <h1>Bienvenido a TimeQR Lock</h1>
     <div class="botones">
       <a href="https://cronoswyt.github.io/TimeQR-Lock/lector">📷 Escanear QR</a>
     </div>
   </div>
 </body>
-
 </html>
