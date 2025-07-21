@@ -1,41 +1,56 @@
- body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-      background: #e0f7fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .container {
-      width: 100%;
-      max-width: 400px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px #ccc;
-      padding: 20px;
-      text-align: center;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 16px;
-    }
-    h1 {
-      font-size: 1.5em;
-      margin-bottom: 10px;
-      color: #222;
-    }
-    .botones a {
-      display: block;
-      margin: 12px auto;
-      padding: 12px;
-      background: #00796b;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 1em;
-    }
-    .botones a:hover {
-      background: #004d40;
-    }
+body {
+        background: #222 url(fondo.webp) no-repeat center center ;
+        background-size: cover;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.212); /* Cambia el 0.4 para más o menos transparencia */
+        z-index: 0;
+        pointer-events: none;
+      }
+      form {
+        width: 100%;
+        max-width: 350px;
+        background: rgba(0,0,0,0.7);
+        padding: 20px;
+        border-radius: 20px;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 1;
+      }
+      h2 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      input, button {
+        border-radius: 20px;
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        color: #fff;
+        background-color: #505050;
+        border: 1px solid #222;
+        box-sizing: border-box;
+        font-size: 1em;
+      }
+      button {
+        background-color: #2a6ad1;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      #mensaje {
+        text-align: center;
+        color: #ff0037;
+        margin-top: 10px;
+      }
