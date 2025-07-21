@@ -83,7 +83,7 @@
 
       // Si no se pudo descifrar o está vacío
       if (!textoDescifrado) {
-        mostrarEstado("❌ QR inválido o no cifrado correctamente", false);
+        mostrarEstado("❌ QR inválido", false);
         setTimeout(() => { window.close(); }, 1500);
         return;
       }
