@@ -13,6 +13,7 @@
       padding: 10px;
       margin: 0;
       background-color: #f2f2f2;
+      min-height: 100vh;
     }
     h2 {
       text-align: center;
@@ -30,7 +31,7 @@
     }
     .ok { color: green; }
     .fail { color: red; }
-    select, button {
+    button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
@@ -45,9 +46,6 @@
 
   <h2>Lector QR - TimeQRLock</h2>
   <button onclick="location.reload();">🔄 Reiniciar</button>
-  
-  <label for="cameraSelect">📷 Selecciona la cámara:</label>
-  <select id="cameraSelect"></select>
 
   <div id="lector"></div>
 
@@ -60,7 +58,6 @@
   </div>
 
   <script>
-    alert(`actualizado`)
     const claveSecreta = "timeqrlock_2025";
     const lector = new Html5Qrcode("lector");
     let escaneando = false;
@@ -72,30 +69,35 @@
     }
 
     function registrarAsistencia(qrCifrado) {
-      try {
-        const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
-        const textoDescifrado = bytes.toString(CryptoJS.enc.Utf8);
+      const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
+      const textoDescifrado = bytes.toString(CryptoJS.enc.Utf8);
 
-        if (!textoDescifrado) throw new Error("QR vacío o clave incorrecta");
-
-        const datos = JSON.parse(textoDescifrado);
-        const ahora = new Date();
-        const fechaHora = ahora.toLocaleString();
-
-        if (!datos.nombre || !datos.grado) {
-          throw new Error("El QR no contiene nombre o grado");
-        }
-
-        document.getElementById("nombre").textContent = datos.nombre;
-        document.getElementById("grado").textContent = datos.grado;
-        document.getElementById("hora").textContent = fechaHora;
-
-        mostrarEstado("✅ QR leído correctamente", true);
-
-      } catch (err) {
-        mostrarEstado("⚠️ QR inválido: " + err.message, false);
-        console.error("Error al procesar QR:", err);
+      if (!textoDescifrado) {
+        mostrarEstado("⚠️ QR vacío o clave incorrecta", false);
+        return;
       }
+
+      let datos;
+      try {
+        datos = JSON.parse(textoDescifrado);
+      } catch (e) {
+        mostrarEstado("⚠️ El QR no tiene formato válido", false);
+        return;
+      }
+
+      if (!datos.nombre || !datos.grado) {
+        mostrarEstado("⚠️ El QR no contiene nombre o grado", false);
+        return;
+      }
+
+      const ahora = new Date();
+      const fechaHora = ahora.toLocaleString();
+
+      document.getElementById("nombre").textContent = datos.nombre;
+      document.getElementById("grado").textContent = datos.grado;
+      document.getElementById("hora").textContent = fechaHora;
+
+      mostrarEstado("✅ QR leído correctamente", true);
     }
 
     async function iniciarLector(camaraId) {
@@ -123,22 +125,21 @@
       });
     }
 
+    // Detectar y usar solo la cámara trasera (o la única disponible)
     Html5Qrcode.getCameras().then(camaras => {
-      const selector = document.getElementById("cameraSelect");
-      camaras.forEach((cam, i) => {
-        const opcion = document.createElement("option");
-        opcion.value = cam.id;
-        opcion.text = cam.label || `Cámara ${i + 1}`;
-        selector.appendChild(opcion);
-      });
-
-      if (camaras.length > 0) {
-        iniciarLector(camaras[0].id);
+      // Buscar cámara trasera (mobile) o la única disponible (PC)
+      let camaraPreferida = camaras[0]?.id || "";
+      for (const cam of camaras) {
+        if (/back|trasera|environment/i.test(cam.label)) {
+          camaraPreferida = cam.id;
+          break;
+        }
       }
-
-      selector.addEventListener("change", e => {
-        iniciarLector(e.target.value);
-      });
+      if (camaraPreferida) {
+        iniciarLector(camaraPreferida);
+      } else {
+        mostrarEstado("No se encontró cámara disponible", false);
+      }
     }).catch(err => {
       alert("🚫 No se pudo acceder a las cámaras");
       console.error("Error al detectar cámaras:", err);
