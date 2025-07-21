@@ -1,6 +1,6 @@
 // Usuarios y contraseñas predefinidos en arreglos
-      const usuarios = ["admin"];
-      const contrasenas = ["1234"];
+      const usuarios = ["admin","1"];
+      const contrasenas = ["1234",1];
 
       function login() {
         const user = document.getElementById("lu").value;
