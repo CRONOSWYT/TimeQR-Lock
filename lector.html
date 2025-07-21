@@ -60,22 +60,89 @@
   </div>
 
   <script>
-    // Código súper simple para mostrar datos al presionar un botón
-    const botonSimular = document.createElement('button');
-    botonSimular.textContent = 'Mostrar datos QR';
-    document.body.appendChild(botonSimular);
+    alert(`actualizado`)
+    const claveSecreta = "timeqrlock_2025";
+    const lector = new Html5Qrcode("lector");
+    let escaneando = false;
 
-    botonSimular.onclick = function() {
-      const nombre = 'Juan Perez';
-      const grado = '10A';
-      const fechaHora = new Date().toLocaleString();
-
-      document.getElementById('nombre').textContent = nombre;
-      document.getElementById('grado').textContent = grado;
-      document.getElementById('hora').textContent = fechaHora;
-      document.getElementById('estado').textContent = 'QR leído correctamente';
-      document.getElementById('estado').className = 'ok';
+    function mostrarEstado(mensaje, exito = true) {
+      const estado = document.getElementById("estado");
+      estado.textContent = mensaje;
+      estado.className = exito ? "ok" : "fail";
     }
+
+    function registrarAsistencia(qrCifrado) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(qrCifrado, claveSecreta);
+        const textoDescifrado = bytes.toString(CryptoJS.enc.Utf8);
+
+        if (!textoDescifrado) throw new Error("QR vacío o clave incorrecta");
+
+        const datos = JSON.parse(textoDescifrado);
+        const ahora = new Date();
+        const fechaHora = ahora.toLocaleString();
+
+        if (!datos.nombre || !datos.grado) {
+          throw new Error("El QR no contiene nombre o grado");
+        }
+
+        document.getElementById("nombre").textContent = datos.nombre;
+        document.getElementById("grado").textContent = datos.grado;
+        document.getElementById("hora").textContent = fechaHora;
+
+        mostrarEstado("✅ QR leído correctamente", true);
+
+      } catch (err) {
+        mostrarEstado("⚠️ QR inválido: " + err.message, false);
+        console.error("Error al procesar QR:", err);
+      }
+    }
+
+    async function iniciarLector(camaraId) {
+      if (escaneando) {
+        await lector.stop();
+        escaneando = false;
+      }
+
+      lector.start(
+        camaraId,
+        { fps: 10, qrbox: 250 },
+        qr => {
+          lector.stop();
+          escaneando = false;
+          registrarAsistencia(qr);
+        },
+        err => {
+          // No mostramos errores de lectura continua
+        }
+      ).then(() => {
+        escaneando = true;
+      }).catch(error => {
+        mostrarEstado("❌ No se pudo iniciar la cámara", false);
+        console.error("Inicio de cámara falló:", error);
+      });
+    }
+
+    Html5Qrcode.getCameras().then(camaras => {
+      const selector = document.getElementById("cameraSelect");
+      camaras.forEach((cam, i) => {
+        const opcion = document.createElement("option");
+        opcion.value = cam.id;
+        opcion.text = cam.label || `Cámara ${i + 1}`;
+        selector.appendChild(opcion);
+      });
+
+      if (camaras.length > 0) {
+        iniciarLector(camaras[0].id);
+      }
+
+      selector.addEventListener("change", e => {
+        iniciarLector(e.target.value);
+      });
+    }).catch(err => {
+      alert("🚫 No se pudo acceder a las cámaras");
+      console.error("Error al detectar cámaras:", err);
+    });
   </script>
 
 </body>
