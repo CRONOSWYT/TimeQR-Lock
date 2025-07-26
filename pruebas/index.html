@@ -1,39 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Prueba de Envío</title>
 </head>
 <body>
-  <form id="formulario">
-    <input type="text" name="nombre" placeholder="Nombre" required><br>
-    <input type="text" name="grado" placeholder="Grado" required><br>
-    <input type="text" name="documento" placeholder="Documento" required><br>
+  <h1>Formulario de Registro</h1>
+  <form id="registroForm">
+    <input type="text" placeholder="Nombre" name="nombre" required><br>
+    <input type="text" placeholder="Documento" name="documento" required><br>
+    <input type="text" placeholder="Grado" name="grado" required><br>
     <button type="submit">Enviar</button>
   </form>
 
+  <p id="mensaje"></p>
+
   <script>
-    const form = document.getElementById('formulario');
-    form.addEventListener('submit', function (e) {
+    const form = document.getElementById('registroForm');
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const datos = {
-        nombre: form.nombre.value,
-        grado: form.grado.value,
-        documento: form.documento.value
-      };
+      const nombre = form.nombre.value;
+      const documento = form.documento.value;
+      const grado = form.grado.value;
 
-      fetch("https://script.google.com/macros/s/AKfycbz2WXLhE9oudLsW2D2pB1W9wHTowuNsrNiNhPpc6hF1WJSf6ETPlkCBqVGFWiKo0W1JVA/exec", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => response.text())
-      .then(data => alert(data))
-      .catch(error => alert("❌ Error: " + error));
+      const ahora = new Date();
+      const fecha = ahora.toLocaleDateString('es-CO');
+      const hora = ahora.toLocaleTimeString('es-CO');
+
+      const datos = { nombre, documento, grado, fecha, hora };
+
+      try {
+        const respuesta = await fetch("https://script.google.com/macros/s/AKfycbz2WXLhE9oudLsW2D2pB1W9wHTowuNsrNiNhPpc6hF1WJSf6ETPlkCBqVGFWiKo0W1JVA/exec", {
+          method: "POST",
+          mode: "no-cors", // ⚠️ IMPORTANTE para evitar el error CORS
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datos)
+        });
+
+        document.getElementById("mensaje").innerText = "✅ Datos enviados (aunque sin respuesta visible por CORS)";
+      } catch (error) {
+        document.getElementById("mensaje").innerText = "❌ Error: " + error;
+      }
     });
   </script>
 </body>
