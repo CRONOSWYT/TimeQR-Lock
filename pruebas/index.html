@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba Envío de Asistencia</title>
+</head>
+<body>
+  <h2>Enviar prueba a la hoja de cálculo</h2>
+
+  <label>Nombre: <input type="text" id="nombre" value="Estudiante Prueba"></label><br>
+  <label>Grado: <input type="text" id="grado" value="11B"></label><br>
+  <label>Documento: <input type="text" id="documento" value="1234567890"></label><br><br>
+  <button onclick="enviarAsistencia()">Enviar Asistencia</button>
+
+  <pre id="respuesta"></pre>
+
+  <script>
+    async function enviarAsistencia() {
+      const url = "https://script.google.com/macros/s/AKfycbz2WXLhE9oudLsW2D2pB1W9wHTowuNsrNiNhPpc6hF1WJSf6ETPlkCBqVGFWiKo0W1JVA/exec";
+
+      const datos = {
+        nombre: document.getElementById("nombre").value,
+        grado: document.getElementById("grado").value,
+        documento: document.getElementById("documento").value,
+        fechaHora: new Date().toISOString()
+      };
+
+      try {
+        const respuesta = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(datos)
+        });
+
+        const texto = await respuesta.text();
+        document.getElementById("respuesta").textContent = texto;
+        console.log("✅ Respuesta del servidor:", texto);
+      } catch (error) {
+        document.getElementById("respuesta").textContent = "❌ Error: " + error.message;
+        console.error("❌ Error al enviar:", error);
+      }
+    }
+  </script>
+</body>
+</html>
