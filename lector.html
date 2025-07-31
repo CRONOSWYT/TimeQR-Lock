@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lector QR - TimeQRLock</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="js/lector.js"></script>
+    <link rel="stylesheet" href="styles/lector.css">
+  </head>
+  <body>
+    <h2>Lector QR - TimeQRLock</h2>
+    <div id="lector"></div>
+    <div id="resultados">
+      <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+      <p><strong>Grado:</strong> <span id="grado"></span></p>
+      <p><strong>Documento:</strong> <span id="doc"></span></p>
+      <p><strong>Hora:</strong> <span id="hora"></span></p>
+      <p id="estado"></p>
+    </div>
+  </body>
+</html>
