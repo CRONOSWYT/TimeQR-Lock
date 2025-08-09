@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh; /* Ocupa como mínimo toda la altura visible de la pantalla */
+    background: #e0f7fa; /* Fondo azul claro */
+    display: flex; /* Usa flex para alinear contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente el contenido */
+}
+img {
+    max-width: 100%; /* Imagen no supera el ancho de su contenedor */
+    height: auto; /* Mantiene proporción de altura */
+}
+h1 {
+    font-size: 24px; /* Tamaño del texto fijo */
+    color: #222; /* Color gris oscuro */
+}
+button {
+   align-items: center; /* Centra verticalmente el contenido */
+    display: block; /* Cada botón ocupa toda la línea */
+    margin: 16px auto 0 auto; /* Centrado y espacio superior */
+    padding: 12px; /* Espaciado interno */
+    background: #00796b; /* Fondo verde-azulado */
+    color: #fff; /* Texto blanco */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de texto fijo */
+    max-width: 250px; /* Ancho máximo del botón */
+    border: none; /* Sin borde */
+}
+button:hover {
+    background: #004d40; /* Color más oscuro al pasar el ratón */
+}
+a{
+  text-decoration: none; /* Quita subrayado */
+}

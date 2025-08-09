@@ -1,0 +1,18 @@
+body {
+  font-family: Arial;
+  padding: 20px; /* Agrega espacio interno alrededor de todo el contenido del body */
+  display: flex; /* Usa flexbox para organizar el contenido */
+  align-items: center; /* Centra los elementos horizontalmente (en el eje cruzado de flex) */
+  flex-direction: column; /* Organiza los elementos en columna (uno debajo del otro) */
+  background-color: rgb(157, 189, 238); /* Color de fondo azul claro */
+}
+
+input {
+  margin: 5px; /* Espacio externo alrededor de cada input */
+  padding: 5px; /* Espacio interno dentro del input */
+  width: 300px; /* Ancho fijo de 300 píxeles para los campos de texto */
+}
+
+#qrcode {
+  margin-top: 20px; /* Espacio superior para separar el código QR del resto del contenido */
+}

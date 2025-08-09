@@ -1,0 +1,51 @@
+body {
+  background: url(fondo.webp) no-repeat center center; /* Fondo gris oscuro con imagen centrada y sin repetición */
+  background-size: cover; /* La imagen de fondo cubre toda la pantalla */
+  font-family: Arial, sans-serif;
+  min-height: 100vh; /* Altura mínima igual a la altura completa de la ventana (responsivo en móviles) */
+  display: flex; /* Usa flex para alinear contenido */
+  justify-content: center; /* Centra contenido horizontalmente */
+  align-items: center; /* Centra contenido verticalmente */
+}
+body::before {
+  content: ""; /* Crea un pseudo-elemento vacío */
+  position: fixed; /* Se mantiene fijo en la pantalla */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; /* Ocupa toda la pantalla */
+  background: rgba(0,0,0,0.212); /* Capa oscura semitransparente sobre el fondo */
+}
+form {
+  width: 100%; /* Ocupa todo el ancho posible */
+  max-width: 350px; /* Ancho máximo de 350px */
+  background: rgba(0, 0, 0, 0.7); /* Fondo negro semitransparente */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 20px; /* Bordes redondeados */
+  position: relative; /* Posición relativa para mantener orden */
+}
+h2 {
+  color: #fff; /* Texto blanco */
+  text-align: center; /* Centra el texto */
+  margin-bottom: 20px; /* Espacio inferior */
+}
+input,
+button {
+  border-radius: 20px; /* Bordes redondeados */
+  display: block; /* Cada elemento ocupa toda la línea */
+  width: 90%; /* Ocupa todo el ancho disponible */
+  margin: 10px 0; /* Espacio vertical entre elementos */
+  padding: 10px; /* Espaciado interno */
+  color: #fff; /* Texto blanco */
+  background-color: #505050; /* Fondo gris oscuro */
+  border: 1px solid #222; /* Borde gris muy oscuro */
+  font-size: 16px; /* Tamaño fijo para mantener consistencia */
+}
+button {
+  background-color: #2a6ad1; /* Fondo azul */
+  color: #fff; /* Texto blanco */
+  cursor: pointer; /* Cambia a mano al pasar el ratón */
+}
+button:hover {
+  background-color: #1a4aa0; /* Color más oscuro al pasar el ratón */
+}
