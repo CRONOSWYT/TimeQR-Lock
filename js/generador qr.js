@@ -15,7 +15,7 @@
         });
 
         // Encriptar los datos (puedes cambiar la clave secreta)
-        const claveSecreta = "timeqrlock-world-time";
+        const claveSecreta = "timeqrlock";
         const datosCifrados = CryptoJS.AES.encrypt(
           datos,
           claveSecreta
@@ -33,4 +33,5 @@
       }
        window.addEventListener('load', () => {
       document.getElementById('loader').classList.add('hidden');
+
     });
