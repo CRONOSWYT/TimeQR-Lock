@@ -1,5 +1,5 @@
 body {
-  background: url(fondo.avif) no-repeat center center; /* Fondo gris oscuro con imagen centrada y sin repetición */
+  background: url(fondo.avif) no-repeat center center; /* Fondo  con imagen centrada y sin repetición */
   background-size: cover; /* La imagen de fondo cubre toda la pantalla */
   font-family: Arial, sans-serif;
   min-height: 100vh; /* Altura mínima igual a la altura completa de la ventana (responsivo en móviles) */
@@ -50,3 +50,4 @@ button:hover {
   background-color: #1a4aa0; /* Color más oscuro al pasar el ratón */
 
 }
+
