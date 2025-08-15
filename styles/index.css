@@ -6,6 +6,7 @@ body {
   display: flex; /* Usa flex para alinear contenido */
   justify-content: center; /* Centra contenido horizontalmente */
   align-items: center; /* Centra contenido verticalmente */
+  margin: 0%; /* Elimina márgenes por defecto del body */
 }
 body::before {
   content: ""; /* Crea un pseudo-elemento vacío */
@@ -14,7 +15,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0; /* Ocupa toda la pantalla */
-  background: rgba(0,0,0,0.212); /* Capa oscura semitransparente sobre el fondo */
+  background: rgba(0, 0, 0, 0.541); /* Capa oscura semitransparente sobre el fondo */
 }
 form {
   width: 100%; /* Ocupa todo el ancho posible */
@@ -36,18 +37,16 @@ button {
   width: 90%; /* Ocupa todo el ancho disponible */
   margin: 10px 0; /* Espacio vertical entre elementos */
   padding: 10px; /* Espaciado interno */
-  color: #fff; /* Texto blanco */
+  color: #fff;
   background-color: #505050; /* Fondo gris oscuro */
   border: 1px solid #222; /* Borde gris muy oscuro */
   font-size: 16px; /* Tamaño fijo para mantener consistencia */
 }
 button {
   background-color: #2a6ad1; /* Fondo azul */
-  color: #fff; /* Texto blanco */
+  color: #fff;
   cursor: pointer; /* Cambia a mano al pasar el ratón */
 }
 button:hover {
   background-color: #1a4aa0; /* Color más oscuro al pasar el ratón */
-
 }
-
