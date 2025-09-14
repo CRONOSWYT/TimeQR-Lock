@@ -1,0 +1,38 @@
+body {
+  font-family: Arial, sans-serif;   /* Define la fuente principal de la página */
+  min-height: 100vh;               /* Hace que el body tenga como mínimo el alto completo de la ventana */
+  background: #e0f7fa;             /* Establece un color celeste claro de fondo */
+  display: flex;                   /* Convierte al body en un contenedor flexbox */
+  justify-content: center;         /* Centra el contenido horizontalmente */
+  align-items: center;             /* Centra el contenido verticalmente */
+  margin: 0;                       /* Elimina los márgenes por defecto del navegador */
+}
+
+.bienvenido {
+  background: #fff;                /* Fondo blanco para el contenedor de bienvenida */
+  padding: 30px;                   /* Espacio interno alrededor del contenido */
+  border-radius: 12px;             /* Bordes redondeados del contenedor */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Sombra suave para dar efecto flotante */
+  text-align: center;              /* Centra todo el texto dentro del contenedor */
+}
+
+h1 {
+  font-size: 22px;                 /* Tamaño de la fuente del título */
+  color: #222;                     /* Color gris oscuro del texto */
+}
+
+button {
+  width: 100%;                     /* El botón ocupa todo el ancho del contenedor */
+  padding: 12px;                   /* Espacio interno dentro del botón */
+  background: #00796b;             /* Color de fondo verde azulado */
+  color: #fff;                     /* Texto en color blanco */
+  border-radius: 6px;              /* Bordes redondeados */
+  font-size: 16px;                 /* Tamaño de texto del botón */
+  border: none;                    /* Quita el borde por defecto del botón */
+  cursor: pointer;                 /* Muestra la mano al pasar el mouse por encima */
+  margin-top: 10px;                /* Añade espacio superior respecto a otros elementos */
+}
+
+button:hover {
+  background: #004d40;             /* Cambia a un verde más oscuro al pasar el cursor */
+}
