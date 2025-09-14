@@ -1,18 +1,65 @@
+/* El body es el contenedor principal de toda la página */
 body {
-  font-family: Arial;
-  padding: 20px; /* Agrega espacio interno alrededor de todo el contenido del body */
-  display: flex; /* Usa flexbox para organizar el contenido */
-  align-items: center; /* Centra los elementos horizontalmente (en el eje cruzado de flex) */
-  flex-direction: column; /* Organiza los elementos en columna (uno debajo del otro) */
-  background-color: rgb(157, 189, 238); /* Color de fondo azul claro */
+  font-family: Arial, sans-serif; /* Define la tipografía principal: Arial y, si no está disponible, sans-serif */
+  background: #a7e9ff; /* Establece un color de fondo azul claro */
+  min-height: 100vh; /* Hace que el body tenga al menos el alto de toda la pantalla visible (100% del viewport height) */
+  margin: 0; /* Elimina los márgenes por defecto del navegador */
+  display: flex; /* Convierte el body en un contenedor flexbox */
+  flex-direction: column; /* Coloca los elementos en columna (uno debajo del otro) */
+  align-items: center; /* Centra los elementos horizontalmente */
 }
 
-input {
-  margin: 5px; /* Espacio externo alrededor de cada input */
-  padding: 5px; /* Espacio interno dentro del input */
-  width: 300px; /* Ancho fijo de 300 píxeles para los campos de texto */
+/* Estilo para los títulos h2 */
+h2 {
+  color: #2a4d7c; /* Color azul oscuro para el texto */
+  margin-top: 40px; /* Añade espacio superior de 40px */
+  font-size: 2rem; /* Tamaño de letra de 2rem 
+   - 1rem equivale al tamaño de la fuente raíz (generalmente 16px en navegadores).
+   - 2rem sería 2 × 16px = 32px, aunque puede variar si se cambia el tamaño base en html. */
 }
 
+/* Estilo para las etiquetas de texto (label) */
+label {
+  color: #2a4d7c; /* Texto azul oscuro */
+  margin-top: 16px; /* Espacio superior de 16px */
+  display: block; /* Hace que el label ocupe todo el ancho (salto de línea automático) */
+}
+
+/* Estilo para los campos de entrada tipo texto */
+input[type="text"] {
+  padding: 8px 12px; /* Espacio interno: 8px arriba/abajo y 12px a los lados */
+  width: 260px; /* Ancho fijo de 260px */
+  border: 1px solid #b3c6e7; /* Borde gris-azulado */
+  border-radius: 6px; /* Bordes redondeados de 6px */
+  font-size: 15px; /* Tamaño del texto dentro del input */
+  background: #fff; /* Fondo blanco */
+}
+
+/* Estilo para los botones */
+button {
+  background: #2a4d7c; /* Fondo azul oscuro */
+  color: #fff; /* Texto blanco */
+  border: none; /* Elimina el borde por defecto */
+  border-radius: 6px; /* Bordes redondeados de 6px */
+  padding: 10px 28px; /* Espaciado interno (10px arriba/abajo, 28px lados) */
+  font-size: 16px; /* Tamaño del texto */
+  cursor: pointer; /* Cambia el cursor a “mano” cuando se pasa por encima */
+  margin-top: 16px; /* Espacio superior de 16px */
+  transition: background 0.2s; /* Transición suave de 0.2s al cambiar el fondo */
+}
+
+/* Estilo cuando el mouse pasa sobre el botón */
+button:hover {
+  background: #18345a; /* Cambia a un azul más oscuro */
+  transform: scale(1.05); /* Aumenta el tamaño del botón al 105% (efecto de zoom) */
+}
+
+/* Estilo para el contenedor del código QR */
 #qrcode {
-  margin-top: 20px; /* Espacio superior para separar el código QR del resto del contenido */
+  margin-top: 28px; /* Espacio superior de 28px */
+  padding: 18px; /* Espacio interno de 18px */
+  background: #fff; /* Fondo blanco */
+  border-radius: 12px; /* Bordes redondeados de 12px */
+  box-shadow: 0 2px 12px #b3c6e7; /* Sombra sutil debajo (0px derecha/izquierda, 2px abajo, difuminado 12px) */
+  display: inline-block; /* Hace que el contenedor ocupe solo lo necesario */
 }
