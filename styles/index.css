@@ -1,52 +1,43 @@
-body {
-  background: url(fondo.avif) no-repeat center center; /* Fondo  con imagen centrada y sin repetición */
-  background-size: cover; /* La imagen de fondo cubre toda la pantalla */
-  font-family: Arial, sans-serif;
-  min-height: 100vh; /* Altura mínima igual a la altura completa de la ventana (responsivo en móviles) */
-  display: flex; /* Usa flex para alinear contenido */
-  justify-content: center; /* Centra contenido horizontalmente */
-  align-items: center; /* Centra contenido verticalmente */
-  margin: 0%; /* Elimina márgenes por defecto del body */
-}
-body::before {
-  content: ""; /* Crea un pseudo-elemento vacío */
-  position: fixed; /* Se mantiene fijo en la pantalla */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0; /* Ocupa toda la pantalla */
-  background: rgba(0, 0, 0, 0.541); /* Capa oscura semitransparente sobre el fondo */
-}
-form {
-  width: 100%; /* Ocupa todo el ancho posible */
-  max-width: 350px; /* Ancho máximo de 350px */
-  background: rgba(0, 0, 0, 0.7); /* Fondo negro semitransparente */
-  padding: 20px; /* Espaciado interno */
-  border-radius: 20px; /* Bordes redondeados */
-  position: relative; /* Posición relativa para mantener orden */
-}
-h2 {
-  color: #fff; /* Texto blanco */
-  text-align: center; /* Centra el texto */
-  margin-bottom: 20px; /* Espacio inferior */
-}
-input,
-button {
-  border-radius: 20px; /* Bordes redondeados */
-  display: block; /* Cada elemento ocupa toda la línea */
-  width: 90%; /* Ocupa todo el ancho disponible */
-  margin: 10px 0; /* Espacio vertical entre elementos */
-  padding: 10px; /* Espaciado interno */
-  color: #fff;
-  background-color: #505050; /* Fondo gris oscuro */
-  border: 1px solid #222; /* Borde gris muy oscuro */
-  font-size: 16px; /* Tamaño fijo para mantener consistencia */
-}
-button {
-  background-color: #2a6ad1; /* Fondo azul */
-  color: #fff;
-  cursor: pointer; /* Cambia a mano al pasar el ratón */
-}
-button:hover {
-  background-color: #1a4aa0; /* Color más oscuro al pasar el ratón */
-}
+ body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .inicio {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 320px;
+    }
+    img {
+      max-width: 16rem;
+    }
+    h1 {
+      font-size: 22px;
+      color: #222;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #00796b;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #004d40;
+    }
