@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio de Sesión - TimeQR Lock</title>
+  <script src="js/index.js"></script>
+  <link rel="stylesheet" href="styles/index.css" />
+</head>
+<body>
+  <div class="inicio">
+    <img src="logo timeqrlock.svg" alt="Logo TimeQR Lock" />
+    <h1>Inicio de Sesión</h1>
+    <form>
+      <input
+          type="text"
+          id="nombre"
+          placeholder="Usuario o Correo Electrónico"
+          required
+        /> <br><br>
+        <input
+          type="password"
+          id="contraseña"
+          placeholder="Contraseña"
+          required
+        /> <br><br>
+        <button type="button" onclick="validarLogin()"><strong>Entrar</strong></button>
+    </form>
+  </div>
+</body>
+</html>
